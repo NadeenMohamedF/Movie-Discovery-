@@ -2,52 +2,42 @@ package com.example.mymovieapp.ui.theme
 
 
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+val PurplePrimary = Color(0xFF6C47DB)
+val DarkBackground = Color(0xFF0E0E0E)
+val TextWhite = Color(0xFFFFFFFF)
 
-// 🎨 الألوان من الباليت بتاعك
-val RaisinBlack = Color(0xFF272838)
-val Black =     Color(0xFF1A1A23)
-val SemiBlack = Color(0xFF1A1B1E)
-val White = Color(0xFFFBFBFD)         // فاتح
-val OrangeCrayola: Color = Color(0xFFFF7329) // أساسي
-val RaisinBlack2 = Color(0xFF1E1D2B)  // غامق تاني
-val CoolGray = Color(0xFF9A9BA6)      // رمادي
+val PurpleTransparent = Color(0x706C47DB)
 
-// 🌞 Light Theme Colors
-private val LightColors = lightColorScheme(
-    primary = OrangeCrayola,
-    onPrimary = White,
-    secondary = CoolGray,
-    onSecondary = RaisinBlack,
-    background = White,
-    onBackground = RaisinBlack,
-    surface = White,
-    onSurface = RaisinBlack
+private val DarkColorScheme = darkColorScheme(
+    primary = PurplePrimary,
+    background = DarkBackground,
+    surface = DarkBackground,
+    onPrimary = TextWhite,
+    onBackground = TextWhite
 )
 
-// 🌚 Dark Theme Colors
-private val DarkColors = darkColorScheme(
-    primary = OrangeCrayola,
-    onPrimary = RaisinBlack2,
-    secondary = CoolGray,
-    onSecondary = White,
-    background = RaisinBlack2,
-    onBackground = White,
-    surface = RaisinBlack,
-    onSurface = White
+private val LightColorScheme = lightColorScheme(
+    primary = PurplePrimary,
+    background = Color.White,
+    surface = Color.White,
+    onPrimary = TextWhite,
+    onBackground = DarkBackground
 )
 
-// ✨ Theme Composable
 @Composable
 fun MyAppTheme(
-    darkTheme: Boolean = false, // ممكن تخليها isSystemInDarkTheme()
+    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    val colors = if (darkTheme) DarkColorScheme else LightColorScheme
+
     MaterialTheme(
-        colorScheme = if (darkTheme) DarkColors else LightColors,
-        typography = Typography(),
+        colorScheme = colors,
+
         content = content
     )
 }

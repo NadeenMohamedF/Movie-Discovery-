@@ -2,89 +2,132 @@ package com.example.mymovieapp.Screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.mymovieapp.Data.AuthMode
 import com.example.mymovieapp.R
-import com.example.mymovieapp.ui.theme.Black
-import com.example.mymovieapp.ui.theme.CoolGray
-import com.example.mymovieapp.ui.theme.OrangeCrayola
-import com.example.mymovieapp.ui.theme.White
-
 
 @Composable
-fun WelcomeScreen(onGetStarted: () -> Unit) {
-    Box(modifier = Modifier.fillMaxSize()
-        .background(color =  Black)) {
-        Column {
-            Image(
-                painter = painterResource(id = R.drawable.intro_pic),
-                contentDescription = "Intro picture",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Column (modifier = Modifier.padding(start = 24.dp,top=24.dp)){
-                Text(
-                    text = "Discover Your",
-                    color = White,
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Favourite Movies",
-                    color = OrangeCrayola,
-                    fontSize = 24.sp,
-                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
-                )
-                Text(
-                    text = "Watch Now or Watch Later",
-                    color = White,
-                    fontSize = 28.sp,
+fun WelcomeScreen(onNavigateToAuth: (AuthMode) -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
 
-                )
-                Text(
-                    text = "you can browse movies and shows by\n" +
-                            "genre, search for specific title, or\n" +
-                            "check out our recommendation for you",
-                    color = CoolGray,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(top = 16.dp)
+        Image(
+            painter = painterResource(id = R.drawable.one),
+            contentDescription = "Movies background",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
 
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            Color(0xFF0E0E0E)
+                        ),
+                        startY = 300f
                     )
-                Button(onClick = onGetStarted,
+                )
+        )
+
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp, vertical = 32.dp).padding(bottom = 24.dp),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "MOVIE\n" +
+                        "  VIBE",
+                color = Color.Companion.White,
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+
+            Button(
+                onClick ={ onNavigateToAuth(AuthMode.SIGNIN)} ,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF6C47DB),
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(text = "Sign In", fontSize = 18.sp, fontWeight = FontWeight.Medium)
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
                     modifier = Modifier
-                    .width(300.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 32.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFF7329),
-                        contentColor = White)
-                    ) {
-                       Text(
-                           text = "Get Started",
-                           fontSize = 16.sp
-                       )
-
-                }
-
-
-
+                        .weight(1f)
+                        .height(1.dp)
+                        .background(Color.White.copy(alpha = 0.4f))
+                )
+                Text(
+                    text = "  or  ",
+                    color = Color.Companion.White.copy(alpha = 0.7f),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(1.dp)
+                        .background(Color.White.copy(alpha = 0.4f))
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = { onNavigateToAuth(AuthMode.SIGN_UP)},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0x406C47DB),
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(text = "Sign Up", fontSize = 18.sp, fontWeight = FontWeight.Medium)
             }
         }
-}
+    }
 }

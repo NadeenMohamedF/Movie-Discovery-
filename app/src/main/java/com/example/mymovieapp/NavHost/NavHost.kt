@@ -14,12 +14,19 @@ import com.example.mymovieapp.Screens.HomeScreen
 import com.example.mymovieapp.ViewModel.AuthViewModel
 import com.example.mymovieapp.Screens.WelcomeScreen
 import com.google.firebase.auth.FirebaseAuth
+import android.app.Activity
+import android.content.Intent
+import androidx.compose.ui.platform.LocalContext
+import com.example.mymovieapp.HomePage
+
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
     var authMode by rememberSaveable { mutableStateOf(AuthMode.SIGNIN) }
     val start = if (FirebaseAuth.getInstance().currentUser != null) "home" else "welcome"
     val authVM: AuthViewModel = viewModel()
+
+    val context = LocalContext.current
 
     NavHost(navController = navController, startDestination = start) {
         composable("welcome") {
@@ -40,18 +47,25 @@ fun AppNavHost(navController: NavHostController) {
                     if (authMode == AuthMode.SIGNIN) {
                         authVM.signIn(
                             onSuccess = {
-                                navController.navigate("home") {
-                                    popUpTo("welcome") { inclusive = true }
-                                }
+//                                navController.navigate("home") {
+//                                    popUpTo("welcome") { inclusive = true }
+                                //}
+                               val intent= Intent(context, HomePage::class.java)
+                                context.startActivity(intent)
+                                //closes the old Compose login screen, so the user can’t go back.
+                                //(context as? Activity)?.finish() // optional: closes the auth screen
+
                             },
                             onError = {}
                         )
                     } else {
                         authVM.signUp(
                             onSuccess = {
-                                navController.navigate("home") {
-                                    popUpTo("welcome") { inclusive = true }
-                                }
+//                                navController.navigate("home") {
+//                                    popUpTo("welcome") { inclusive = true }
+                            //}
+                                val intent = Intent(context, HomePage::class.java)
+                                context.startActivity(intent)
                             },
                             onError = {}
                         )

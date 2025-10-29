@@ -57,6 +57,11 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.room.common.jvm)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -87,5 +92,8 @@ dependencies {
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
+    //slider
+    implementation("com.github.denzcoskun:ImageSlideshow:0.1.2")
+    implementation("com.google.android.material:material:1.12.0")
 
 }

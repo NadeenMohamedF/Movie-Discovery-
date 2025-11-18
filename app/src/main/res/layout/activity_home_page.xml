@@ -34,6 +34,16 @@
             tools:layout_editor_absoluteY="12dp" />
     </androidx.appcompat.widget.Toolbar>
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/search_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#D5CDE4"
+        android:visibility="gone"
+        android:elevation="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
     <!-- ✅ Scrollable content below toolbar -->
     <ScrollView
         android:id="@+id/scrollView2"
@@ -137,6 +147,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+
         </LinearLayout>
     </ScrollView>
     <!-- ✅ Fixed Bottom Bar -->
@@ -159,9 +170,9 @@
 
             <ImageView
                 android:id="@+id/favorite_icon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/favorite_icon"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/favorite_ic"
                 app:tint="@color/white" />
 
             <TextView
@@ -182,9 +193,9 @@
 
             <ImageView
                 android:id="@+id/profile_icon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/profile"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/profile_ic"
                 app:tint="@color/white" />
 
             <TextView
@@ -195,7 +206,7 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <!-- Settings -->
+        <!-- Settings
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -217,7 +228,33 @@
                 android:textColor="@color/white"
                 android:textSize="12sp" />
         </LinearLayout>
+        -->
+
+        <!-- filter -->
+        <LinearLayout
+            android:id="@+id/filter_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/filter_ic"
+                app:tint="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Filter"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
 
     </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

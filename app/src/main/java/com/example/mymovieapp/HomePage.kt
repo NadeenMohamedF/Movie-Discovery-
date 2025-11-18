@@ -1,8 +1,14 @@
 package com.example.mymovieapp
 
+import android.net.Uri
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.models.SlideModel
+import com.denzcoskun.imageslider.interfaces.ItemClickListener
+
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -25,25 +33,67 @@ class HomePage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //enableEdgeToEdge()
         setContentView(R.layout.activity_home_page)
+        //loadMoviesByGenre("28")  // جربي تبدأي بأفلام الأكشن
 
         val Movies_recyclerView = findViewById<RecyclerView>(R.id.movies_recyclerView)
-        Movies_recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-         moviesAdapter = MoviesAdapter(emptyList())
+        Movies_recyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        moviesAdapter = MoviesAdapter(emptyList())
         Movies_recyclerView.adapter = moviesAdapter
 
         val favorite = findViewById<ImageView>(R.id.favorite_icon)
-        val settings = findViewById<ImageView>(R.id.settings_icon)
+        //val settings = findViewById<ImageView>(R.id.settings_icon)
         val profile = findViewById<ImageView>(R.id.profile_icon)
+        val searchBar = findViewById<EditText>(R.id.editTextText)
+        val filterBtn = findViewById<LinearLayout>(R.id.filter_button)
+
+        filterBtn.setOnClickListener {
+            val bottomSheet = FilterBottomSheet()
+            bottomSheet.show(supportFragmentManager, "FilterBottomSheet")
+        }
+
+
+        searchBar.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+
+                val drawableStart = searchBar.compoundDrawables[0]
+                if (drawableStart != null) {
+                    val iconWidth = drawableStart.bounds.width()
+
+                    if (event.rawX <= searchBar.left + iconWidth + searchBar.paddingStart + 40) {
+
+                        v.performClick()
+                        val query = searchBar.text.toString()
+
+                        val fragment = SearchFragment.newInstance(query)
+
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.search_fragment_container, fragment)
+                            .addToBackStack(null)
+                            .commit()
+
+                        findViewById<View>(R.id.search_fragment_container).visibility = View.VISIBLE
+
+                        return@setOnTouchListener true
+                    }
+                }
+            }
+
+            false
+        }
+
+
+
 
         favorite.setOnClickListener {
             Toast.makeText(this, "favorite clicked", Toast.LENGTH_SHORT).show()
             // Example: navigate to home or scroll to top
         }
 
-        settings.setOnClickListener {
+      /*  settings.setOnClickListener {
             Toast.makeText(this, "settings clicked", Toast.LENGTH_SHORT).show()
             // Example: open search screen
-        }
+        }*/
 
         profile.setOnClickListener {
             Toast.makeText(this, "profile clicked", Toast.LENGTH_SHORT).show()
@@ -55,6 +105,8 @@ class HomePage : AppCompatActivity() {
         fetchUpcomingMovies()
 
     }
+
+
     private fun fetchMovies() {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.themoviedb.org/3/")
@@ -70,13 +122,20 @@ class HomePage : AppCompatActivity() {
                     val movies = response.body()?.results ?: emptyList()
                     moviesAdapter.updateMovies(movies)
 
+                    //to show movies trailer in slider
+
+
+
                     // 🎞 Fill image slider with movie backdrops
                     val imageSlider = findViewById<ImageSlider>(R.id.imageSlider)
                     val sliderList = movies.map {
                         //sliderModel is from slider liberary
                         SlideModel("https://image.tmdb.org/t/p/w500${it.backdrop_path}", it.title, ScaleTypes.CENTER_CROP)
+
                     }
                     imageSlider.setImageList(sliderList)
+                    imageSlider.startSliding(3000)
+
                 }
             }
 
@@ -85,6 +144,7 @@ class HomePage : AppCompatActivity() {
             }
         })
     }
+
 
     private fun setupUpcomingRecyclerView() {
         upcomingRecyclerView = findViewById(R.id.upcoming_recyclerView)
@@ -119,4 +179,126 @@ class HomePage : AppCompatActivity() {
         })
     }
 
+    fun loadMoviesByGenre(genreId: String) {
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.themoviedb.org/3/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val api = retrofit.create(ApiService::class.java)
+
+        val call = api.discoverMovies(
+            apiKey = "fbb1ae6016c7313d0fdf0bb5784c5716",
+            sortBy = "popularity.desc",
+            genres = genreId
+        )
+
+        call.enqueue(object : Callback<MovieResponse> {
+            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+                if (response.isSuccessful) {
+
+                    val movies = response.body()?.results ?: emptyList()
+
+                    moviesAdapter.updateMovies(movies)
+                }
+            }
+
+            override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
+                t.printStackTrace()
+            }
+        })
+    }
+
+
+
+    /*  private fun fetchMovies() {
+
+          val retrofit = Retrofit.Builder()
+              .baseUrl("https://api.themoviedb.org/3/")
+              .addConverterFactory(GsonConverterFactory.create())
+              .build()
+
+          val api = retrofit.create(ApiService::class.java)
+          val call = api.getNowPlayingMovies("fbb1ae6016c7313d0fdf0bb5784c5716")
+
+          call.enqueue(object : Callback<MovieResponse> {
+              override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+                  if (response.isSuccessful) {
+
+                      val movies = response.body()?.results ?: emptyList()
+                      moviesAdapter.updateMovies(movies)
+
+                      // 🔥 نجيب الـ ImageSlider
+                      val imageSlider = findViewById<ImageSlider>(R.id.imageSlider)
+
+                      // 🔥 بنعمل list فاضية هنملّاها بالصور
+                      val sliderList = mutableListOf<SlideModel>()
+
+                      // 🔥 نجيب trailer لكل فيلم
+                      val trailerKeys = mutableListOf<String>()
+
+                      for (movie in movies) {
+                          val videoCall =
+                              api.getMovieVideos(movie.id, "fbb1ae6016c7313d0fdf0bb5784c5716")
+
+                          videoCall.enqueue(object : Callback<VideoResponse> {
+                              override fun onResponse(
+                                  call: Call<VideoResponse>,
+                                  response: Response<VideoResponse>
+                              ) {
+                                  if (response.isSuccessful) {
+                                      val videoList = response.body()?.results ?: emptyList()
+
+                                      val trailer = videoList.firstOrNull {
+                                          it.type == "Trailer" && it.site == "YouTube"
+                                      }
+
+                                      if (trailer != null) {
+                                          val thumbnailUrl =
+                                              "https://img.youtube.com/vi/${trailer.key}/hqdefault.jpg"
+
+                                          sliderList.add(
+                                              SlideModel(thumbnailUrl, movie.title,ScaleTypes.CENTER_CROP)
+                                          )
+                                          trailerKeys.add(trailer.key)
+
+                                          // 🔥 كل مرة نضيف صورة → نحدث السلايدر
+                                          imageSlider.setImageList(sliderList)
+
+                                      }
+                                  }
+                              }
+
+                              override fun onFailure(call: Call<VideoResponse>, t: Throwable) {}
+                          })
+                      }
+                      imageSlider.setItemClickListener(object : ItemClickListener {
+                          override fun onItemSelected(position: Int) {
+
+                              if (position < trailerKeys.size) {
+                                  val youtubeKey = trailerKeys[position]
+                                  val url = "https://www.youtube.com/watch?v=$youtubeKey"
+                                  val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                  startActivity(intent)
+                              }
+                          }
+
+                          override fun doubleClick(position: Int) {
+                              // سيبيه فاضي، مطلوب فقط علشان يكمل الـ interface
+                          }
+                      })
+
+                  }
+              }
+
+              override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
+                  t.printStackTrace()
+
+
+              }
+          })
+      }*/
 }
+
+

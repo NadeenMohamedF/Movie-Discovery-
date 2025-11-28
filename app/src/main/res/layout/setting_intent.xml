@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- العنوان محسّن -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:layout_marginBottom="32dp"
+            android:padding="16dp" />
+
+        <!-- Notification Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:background="@drawable/rounded_card"
+            android:layout_marginBottom="12dp"
+            android:clickable="true">
+
+
+            <TextView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:text="🔔"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:textColor="#BB86FC" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Enable Notifications"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginStart="16dp"
+                android:gravity="center_vertical" />
+
+            <Switch
+                android:id="@+id/switch_notifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <!-- Clear Favorites Card -->
+        <LinearLayout
+            android:id="@+id/btnClearFavorites"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:background="@drawable/rounded_card"
+            android:layout_marginBottom="12dp"
+            android:clickable="true">
+
+            <TextView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:text="⭐"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:textColor="#FF6B6B" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Clear Favorites"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginStart="16dp"
+                android:gravity="center_vertical" />
+
+
+        </LinearLayout>
+
+        <!-- About Us Card -->
+        <LinearLayout
+            android:id="@+id/tvAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:background="@drawable/rounded_card"
+            android:layout_marginBottom="12dp"
+            android:clickable="true">
+
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="About Us"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginStart="16dp"
+                android:gravity="center_vertical" />
+
+        </LinearLayout>
+
+        <!-- Logout Card -->
+        <LinearLayout
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:background="@drawable/rounde_card_red"
+            android:layout_marginBottom="12dp"
+            android:clickable="true">
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="  Logout"
+                android:textColor="#FF5252"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

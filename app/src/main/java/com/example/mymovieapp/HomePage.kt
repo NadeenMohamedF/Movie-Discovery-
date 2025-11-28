@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -42,8 +43,8 @@ class HomePage : AppCompatActivity() {
         Movies_recyclerView.adapter = moviesAdapter
 
         val favorite = findViewById<ImageView>(R.id.favorite_icon)
-        //val settings = findViewById<ImageView>(R.id.settings_icon)
-        val profile = findViewById<ImageView>(R.id.profile_icon)
+        val settings = findViewById<ImageView>(R.id.settings_icon)
+        //val profile = findViewById<ImageView>(R.id.profile_icon)
         val searchBar = findViewById<EditText>(R.id.editTextText)
         val filterBtn = findViewById<LinearLayout>(R.id.filter_button)
 
@@ -83,22 +84,40 @@ class HomePage : AppCompatActivity() {
         }
 
 
-
-
         favorite.setOnClickListener {
             Toast.makeText(this, "favorite clicked", Toast.LENGTH_SHORT).show()
-            // Example: navigate to home or scroll to top
+            findViewById<View>(R.id.scrollView2).visibility = View.GONE
+
+            findViewById<View>(R.id.search_fragment_container).visibility = View.VISIBLE
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.search_fragment_container, FavoritesFragment())
+                .addToBackStack(null)
+                .commit()
+
+
         }
 
-      /*  settings.setOnClickListener {
-            Toast.makeText(this, "settings clicked", Toast.LENGTH_SHORT).show()
+        settings.setOnClickListener {
+            val intent = Intent(this, Settings_intent::class.java)
+            startActivity(intent)
+           // Toast.makeText(this, "settings clicked", Toast.LENGTH_SHORT).show()
             // Example: open search screen
-        }*/
-
-        profile.setOnClickListener {
-            Toast.makeText(this, "profile clicked", Toast.LENGTH_SHORT).show()
-            // Example: navigate to profile screen
         }
+
+        onBackPressedDispatcher.addCallback(this) {
+            val container = findViewById<View>(R.id.search_fragment_container)
+
+            if (container.visibility == View.VISIBLE) {
+                // اخفي الـ Fragment container
+                container.visibility = View.GONE
+                // أظهر الـ Home scroll
+                findViewById<View>(R.id.scrollView2).visibility = View.VISIBLE
+            } else {
+                // لو مفيش حاجة، اعمل Back طبيعي
+                finish()
+            }
+        }
+
 
         setupUpcomingRecyclerView()
         fetchMovies()
@@ -212,93 +231,8 @@ class HomePage : AppCompatActivity() {
 
 
 
-    /*  private fun fetchMovies() {
-
-          val retrofit = Retrofit.Builder()
-              .baseUrl("https://api.themoviedb.org/3/")
-              .addConverterFactory(GsonConverterFactory.create())
-              .build()
-
-          val api = retrofit.create(ApiService::class.java)
-          val call = api.getNowPlayingMovies("fbb1ae6016c7313d0fdf0bb5784c5716")
-
-          call.enqueue(object : Callback<MovieResponse> {
-              override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-                  if (response.isSuccessful) {
-
-                      val movies = response.body()?.results ?: emptyList()
-                      moviesAdapter.updateMovies(movies)
-
-                      // 🔥 نجيب الـ ImageSlider
-                      val imageSlider = findViewById<ImageSlider>(R.id.imageSlider)
-
-                      // 🔥 بنعمل list فاضية هنملّاها بالصور
-                      val sliderList = mutableListOf<SlideModel>()
-
-                      // 🔥 نجيب trailer لكل فيلم
-                      val trailerKeys = mutableListOf<String>()
-
-                      for (movie in movies) {
-                          val videoCall =
-                              api.getMovieVideos(movie.id, "fbb1ae6016c7313d0fdf0bb5784c5716")
-
-                          videoCall.enqueue(object : Callback<VideoResponse> {
-                              override fun onResponse(
-                                  call: Call<VideoResponse>,
-                                  response: Response<VideoResponse>
-                              ) {
-                                  if (response.isSuccessful) {
-                                      val videoList = response.body()?.results ?: emptyList()
-
-                                      val trailer = videoList.firstOrNull {
-                                          it.type == "Trailer" && it.site == "YouTube"
-                                      }
-
-                                      if (trailer != null) {
-                                          val thumbnailUrl =
-                                              "https://img.youtube.com/vi/${trailer.key}/hqdefault.jpg"
-
-                                          sliderList.add(
-                                              SlideModel(thumbnailUrl, movie.title,ScaleTypes.CENTER_CROP)
-                                          )
-                                          trailerKeys.add(trailer.key)
-
-                                          // 🔥 كل مرة نضيف صورة → نحدث السلايدر
-                                          imageSlider.setImageList(sliderList)
-
-                                      }
-                                  }
-                              }
-
-                              override fun onFailure(call: Call<VideoResponse>, t: Throwable) {}
-                          })
-                      }
-                      imageSlider.setItemClickListener(object : ItemClickListener {
-                          override fun onItemSelected(position: Int) {
-
-                              if (position < trailerKeys.size) {
-                                  val youtubeKey = trailerKeys[position]
-                                  val url = "https://www.youtube.com/watch?v=$youtubeKey"
-                                  val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                                  startActivity(intent)
-                              }
-                          }
-
-                          override fun doubleClick(position: Int) {
-                              // سيبيه فاضي، مطلوب فقط علشان يكمل الـ interface
-                          }
-                      })
-
-                  }
-              }
-
-              override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                  t.printStackTrace()
 
 
-              }
-          })
-      }*/
 }
 
 

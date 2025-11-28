@@ -36,6 +36,17 @@ interface ApiService {
         @Query("sort_by") sortBy: String,
         @Query("with_genres") genres: String? = null
     ): Call<MovieResponse>
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetails(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String
+    ): MovieDetails
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String
+    ): CreditsResponse
 
 
 }

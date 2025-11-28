@@ -2,4 +2,7 @@
     <string name="app_name">MyMovieApp</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_add_to_favorites">Add to Favorites</string>
+    <string name="action_remove_from_favorites">Remove from Favorites</string>
+    <string name="movie_poster">movie_poster</string>
 </resources>
